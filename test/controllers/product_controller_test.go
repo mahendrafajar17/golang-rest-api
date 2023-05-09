@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"flag"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,7 +16,11 @@ import (
 var router *gin.Engine
 
 func setup() {
-	mysqlConnection := configurations.InitMySQL()
+	yamlPath := flag.String("config", "../../config.yaml", "path config yaml file")
+	config := configurations.LoadConfig(*yamlPath)
+	fmt.Println(config)
+
+	mysqlConnection := configurations.InitMySQL(config)
 	router = middleware.SetUpRouter(mysqlConnection)
 }
 
