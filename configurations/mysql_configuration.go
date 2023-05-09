@@ -3,16 +3,13 @@ package configurations
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const dbuser = "root"
-const dbpass = ""
-const dbname = "test"
-
-func InitMySQL() *sql.DB {
-	db, err := sql.Open("mysql", dbuser+":"+dbpass+"@tcp(127.0.0.1:3306)/"+dbname)
+func InitMySQL(config *Config) *sql.DB {
+	db, err := sql.Open("mysql", config.DB.User+":"+config.DB.Password+"@tcp("+config.DB.Host+":"+strconv.Itoa(config.DB.Port)+")/"+config.DB.Database)
 	if err != nil {
 		// simply print the error to the console
 		fmt.Println("Err", err.Error())

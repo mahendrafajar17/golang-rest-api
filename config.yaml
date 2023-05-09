@@ -1,0 +1,18 @@
+app:
+  host: localhost
+  port: 8080
+  path:
+    encrypt: /encrypt
+mysql:
+  provider: mysql
+  host: localhost
+  port: 3306
+  database: test
+  user: root
+  password: 
+  options:
+artemis:
+  host: localhost
+  port: 61616
+  user:
+  password: 

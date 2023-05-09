@@ -1,22 +1,25 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"strconv"
 
 	"example.com/restapi/configurations"
 	"example.com/restapi/middleware"
 	"example.com/restapi/service"
 )
 
-const host = "127.0.0.1"
-const port = "61616"
-
 func main() {
-	mysqlConnection := configurations.InitMySQL()
+	yamlPath := flag.String("config", "config.yaml", "path config yaml file")
+	config := configurations.LoadConfig(*yamlPath)
+	fmt.Println(config)
+
+	mysqlConnection := configurations.InitMySQL(config)
 	router := middleware.SetUpRouter(mysqlConnection)
 
 	// done := make(chan int, 1)
-	Service := service.NewStompConService(host + ":" + port)
+	Service := service.NewStompConService(config.Artemis.Host + ":" + strconv.Itoa(config.Artemis.Port))
 	go func() {
 
 		Service.Thread(5, "test")
@@ -25,7 +28,7 @@ func main() {
 
 	}()
 
-	router.Run("localhost:8080")
+	router.Run(config.App.Host + ":" + strconv.Itoa(config.App.Port))
 
 	// <-done
 	fmt.Println("Trying Stopped...")
